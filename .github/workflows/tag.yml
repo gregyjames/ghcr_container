@@ -1,0 +1,51 @@
+name: docker_build_push_acr
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  pull_request:
+    branches:
+      - "main"
+      
+jobs:
+  docker_build_push_acr:
+    name: 'Docker Build and Push to ACR'
+    runs-on: ubuntu-latest
+    environment: production
+  
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+  
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Convert repository name to lowercase
+        id: lowercase
+        run: echo "lowercase_repo=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+    - name: Use the lowercase repository name
+        run: echo "The lowercase repository name is ${{ env.lowercase_repo }}"
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        # list of Docker images to use as base name for tags
+        images: |
+            ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.lowercase_repo }}     
+        tags: |
+            type=semver,pattern={{version}}
+    - name: 'Docker Login'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.PAT_PACKAGE_TOKEN }}
+    - name: Build the frontend image and push it to ACR
+      uses: docker/build-push-action@v5
+      with:
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}

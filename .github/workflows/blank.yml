@@ -18,8 +18,19 @@ jobs:
   convert_to_lowercase:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Convert repository name to lowercase
         id: lowercase
-        run: echo "lowercase_repo=$(echo TESTTESTTESTTEST | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        run: echo "lowercase_repo=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       - name: Use the lowercase repository name
         run: echo "The lowercase repository name is ${{ env.lowercase_repo }}"
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.PAT_PACKAGE_TOKEN }}
+      - name: Build Image
+        run: docker build -t ghcr.io/${{ env.lowercase_repo }}:latest .
+      - name: Push Image
+        run: docker push ghcr.io/${{ env.lowercase_repo }}:latest

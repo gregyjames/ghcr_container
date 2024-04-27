@@ -5,3 +5,13 @@ Build an docker container and push it to to your packages. Using this because I 
 ## How to use
 Go to settings -> Developer Settings -> Personal Access Tokens -> Tokens (Classic). Create a new token with delete:packages, repo, write:packages permissions. Copy this and save as an repositiory secret named PAT_PACKAGE_TOKEN.
 
+## Azure Container Settings
+| Setting    | Value |
+| -------- | ------- |
+Name | {repo_name}
+Image source | Docker Hub or other registries
+Image type | Private
+Registry login server | ghcr.io
+Username | Github Username
+Password | PAT_PACKAGE_TOKEN
+Image name | {username}/{repo_name}:{version_tag}

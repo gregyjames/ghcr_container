@@ -9,7 +9,7 @@ on:
       - "main"
       
 jobs:
-  docker_build_push_acr:
+  docker_build_push_ghcr:
     name: 'Docker Build and Push to GHCR'
     runs-on: ubuntu-latest
     environment: production

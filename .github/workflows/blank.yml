@@ -20,6 +20,6 @@ jobs:
     steps:
       - name: Convert repository name to lowercase
         id: lowercase
-        run: echo "lowercase_repo=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        run: echo "lowercase_repo=$(echo TESTTESTTESTTEST | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       - name: Use the lowercase repository name
         run: echo "The lowercase repository name is ${{ env.lowercase_repo }}"

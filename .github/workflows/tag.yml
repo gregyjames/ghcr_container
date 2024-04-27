@@ -24,10 +24,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Convert repository name to lowercase
-        id: lowercase
-        run: echo "lowercase_repo=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      id: lowercase
+      run: echo "lowercase_repo=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
     - name: Use the lowercase repository name
-        run: echo "The lowercase repository name is ${{ env.lowercase_repo }}"
+      run: echo "The lowercase repository name is ${{ env.lowercase_repo }}"
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v5
